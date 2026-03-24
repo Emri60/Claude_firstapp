@@ -6,9 +6,8 @@ const prisma = new PrismaClient()
 
 async function main() {
   // Users
-  const hash = await bcrypt.hash('sourcing2024', 10)
-  await prisma.user.upsert({ where: { username: 'user1' }, update: {}, create: { username: 'user1', password_hash: hash } })
-  await prisma.user.upsert({ where: { username: 'user2' }, update: {}, create: { username: 'user2', password_hash: hash } })
+  const hash = await bcrypt.hash('0000', 10)
+  await prisma.user.upsert({ where: { username: 'polak' }, update: {}, create: { username: 'polak', password_hash: hash } })
   console.log('Users créés')
 
   // Objets
