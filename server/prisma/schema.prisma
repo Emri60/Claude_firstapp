@@ -1,0 +1,124 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            Int      @id @default(autoincrement())
+  username      String   @unique
+  password_hash String
+  created_at    DateTime @default(now())
+}
+
+model Objet {
+  id                 Int       @id @default(autoincrement())
+  nom                String
+  fabricant          String?
+  designer           String?
+  categorie          Categorie
+  epoque             String?
+  dimensions         String?
+  description        String?
+  rarete             Rarete
+  priorite           Priorite
+  prix_achat_min     Float?
+  prix_achat_max     Float?
+  prix_revente_min   Float?
+  prix_revente_max   Float?
+  marge_estimee      Float?
+  mots_cles_polonais String?
+  liens_reference    Json?
+  tests_authenticite Json?
+  signaux_alerte     Json?
+  photos_reference   Json?
+  statut             Statut   @default(A_CHERCHER)
+  notes              String?
+  poids_estime       Float?
+  volume_estime      Float?
+  created_at         DateTime @default(now())
+  updated_at         DateTime @updatedAt
+  achats             Achat[]
+}
+
+model Vendeur {
+  id                  Int             @id @default(autoincrement())
+  nom                 String
+  telephone           String?
+  stand_habituel      String?
+  marche              String?
+  specialite          String?
+  a_entrepot          Boolean         @default(false)
+  niveau_confiance    NiveauConfiance @default(INCONNU)
+  notes               String?
+  rappel_avant_voyage Boolean         @default(false)
+  created_at          DateTime        @default(now())
+  updated_at          DateTime        @updatedAt
+  achats              Achat[]
+}
+
+model Achat {
+  id         Int      @id @default(autoincrement())
+  objet_id   Int
+  vendeur_id Int
+  prix_paye  Float
+  date       DateTime
+  voyage     String?
+  notes      String?
+  created_at DateTime @default(now())
+  objet      Objet    @relation(fields: [objet_id], references: [id])
+  vendeur    Vendeur  @relation(fields: [vendeur_id], references: [id])
+}
+
+model ChecklistItem {
+  id         Int      @id @default(autoincrement())
+  label      String
+  checked    Boolean  @default(false)
+  ordre      Int
+  created_at DateTime @default(now())
+}
+
+model RDV {
+  id          Int      @id @default(autoincrement())
+  jour        String
+  heure       String
+  type        String
+  nom_contact String
+  adresse     String?
+  notes       String?
+  created_at  DateTime @default(now())
+}
+
+enum Categorie {
+  LAMPE
+  AFFICHE
+  FAUTEUIL
+  AUTRE
+}
+
+enum Rarete {
+  ABONDANT
+  MOYEN
+  RARE
+}
+
+enum Priorite {
+  HAUTE
+  MOYENNE
+  BASSE
+}
+
+enum Statut {
+  A_CHERCHER
+  REPERE
+  ACHETE
+}
+
+enum NiveauConfiance {
+  FIABLE
+  MOYEN
+  INCONNU
+}
