@@ -4,11 +4,22 @@ import Badge from '../../components/Badge'
 export default function ObjetCard({ objet }) {
   const navigate = useNavigate()
 
+  const photo = objet.photos_reference?.[0]
+
   return (
     <div
       onClick={() => navigate(`/objets/${objet.id}`)}
-      className="bg-card rounded-2xl p-4 shadow-sm border border-gray-100 active:scale-[0.99] transition-transform cursor-pointer"
+      className="bg-card rounded-2xl shadow-sm border border-gray-100 active:scale-[0.99] transition-transform cursor-pointer overflow-hidden"
     >
+      {photo && (
+        <img
+          src={photo}
+          alt={objet.nom}
+          className="w-full h-40 object-cover"
+          loading="lazy"
+        />
+      )}
+      <div className="p-4">
       <div className="flex items-start justify-between gap-2 mb-2">
         <h3 className="font-semibold text-ink text-base leading-tight flex-1">{objet.nom}</h3>
         {objet.marge_estimee != null && (
@@ -42,6 +53,7 @@ export default function ObjetCard({ objet }) {
           )}
         </div>
       )}
+      </div>
     </div>
   )
 }
