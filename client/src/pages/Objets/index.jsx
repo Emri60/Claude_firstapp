@@ -101,7 +101,7 @@ export default function ObjetsPage() {
       ) : objets.length === 0 ? (
         <p className="text-center text-gray-400 py-12">Aucun objet trouvé</p>
       ) : (
-        <div className="space-y-3 pb-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 pb-4">
           {objets.map(o => <ObjetCard key={o.id} objet={o} />)}
         </div>
       )}

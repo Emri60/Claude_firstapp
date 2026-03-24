@@ -268,17 +268,46 @@ export default function ObjetForm() {
 
       {/* Photos */}
       <section className="space-y-2">
-        <h3 className="font-semibold text-ink text-sm uppercase tracking-wide">Photos</h3>
+        <div className="flex items-center justify-between">
+          <h3 className="font-semibold text-ink text-sm uppercase tracking-wide">Photos</h3>
+          {form.photos_reference.length > 1 && (
+            <span className="text-xs text-gray-400">Appuyer sur ★ pour choisir la couverture</span>
+          )}
+        </div>
         {form.photos_reference.length > 0 && (
           <div className="flex gap-2 overflow-x-auto pb-1">
             {form.photos_reference.map((url, i) => (
               <div key={i} className="relative flex-shrink-0">
-                <img src={url} alt="" className="h-20 w-20 object-cover rounded-lg" />
+                <img
+                  src={url}
+                  alt=""
+                  className={`h-24 w-24 object-cover rounded-lg ${i === 0 ? 'ring-2 ring-secondary' : ''}`}
+                />
+                {/* Bouton supprimer */}
                 <button
                   type="button"
                   onClick={() => set('photos_reference', form.photos_reference.filter((_, j) => j !== i))}
                   className="absolute -top-1 -right-1 w-5 h-5 bg-primary text-white rounded-full text-xs flex items-center justify-center"
                 >✕</button>
+                {/* Bouton couverture */}
+                {i !== 0 && (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      const photos = [...form.photos_reference]
+                      photos.splice(i, 1)
+                      photos.unshift(url)
+                      set('photos_reference', photos)
+                    }}
+                    className="absolute bottom-1 right-1 w-6 h-6 bg-black/50 text-yellow-300 rounded-full text-xs flex items-center justify-center"
+                    title="Définir comme photo de couverture"
+                  >★</button>
+                )}
+                {i === 0 && (
+                  <div className="absolute bottom-1 left-1 bg-secondary text-white text-xs px-1 rounded font-medium">
+                    couv.
+                  </div>
+                )}
               </div>
             ))}
           </div>
