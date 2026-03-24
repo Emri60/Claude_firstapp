@@ -16,6 +16,7 @@ export default function Layout() {
 
   const base = '/' + location.pathname.split('/')[1]
   const title = TITLES[base] ?? 'Sourcing Vintage'
+  const isSubPage = location.pathname !== base
 
   function handleLogout() {
     logout()
@@ -25,7 +26,19 @@ export default function Layout() {
   return (
     <div className="min-h-screen bg-bg flex flex-col">
       <header className="sticky top-0 z-40 bg-white border-b border-gray-200 px-4 py-3 flex items-center justify-between">
-        <h1 className="text-lg font-bold text-ink">{title}</h1>
+        {isSubPage ? (
+          <button
+            onClick={() => navigate(-1)}
+            className="flex items-center gap-1.5 text-ink font-medium text-sm active:opacity-60"
+          >
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5} className="w-4 h-4">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M15 19l-7-7 7-7" />
+            </svg>
+            Retour
+          </button>
+        ) : (
+          <h1 className="text-lg font-bold text-ink">{title}</h1>
+        )}
         <button
           onClick={handleLogout}
           className="text-sm text-gray-400 hover:text-gray-600 transition-colors"

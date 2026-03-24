@@ -108,11 +108,7 @@ export default function ObjetForm() {
 
   return (
     <form onSubmit={handleSubmit} className="px-4 pt-4 pb-6 space-y-5">
-      <div className="flex items-center justify-between mb-2">
-        <button type="button" onClick={() => navigate(-1)} className="text-gray-400 text-sm">← Retour</button>
-        <h2 className="font-bold text-ink">{isEdit ? 'Modifier' : 'Nouvel objet'}</h2>
-        <div />
-      </div>
+      <h2 className="font-bold text-ink mb-2">{isEdit ? 'Modifier l\'objet' : 'Nouvel objet'}</h2>
 
       {/* Infos générales */}
       <section className="space-y-3">

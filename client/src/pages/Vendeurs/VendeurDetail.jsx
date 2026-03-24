@@ -27,8 +27,7 @@ export default function VendeurDetail() {
 
   return (
     <div className="px-4 pt-4 pb-6 space-y-5">
-      <div className="flex items-center justify-between">
-        <button onClick={() => navigate(-1)} className="text-gray-400 text-sm">← Retour</button>
+      <div className="flex justify-end">
         <button onClick={() => navigate(`/vendeurs/${id}/modifier`)} className="text-sm text-primary font-medium">Modifier</button>
       </div>
 

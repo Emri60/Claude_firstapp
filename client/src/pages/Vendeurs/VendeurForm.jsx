@@ -48,11 +48,7 @@ export default function VendeurForm() {
 
   return (
     <form onSubmit={handleSubmit} className="px-4 pt-4 pb-6 space-y-4">
-      <div className="flex items-center justify-between mb-2">
-        <button type="button" onClick={() => navigate(-1)} className="text-gray-400 text-sm">← Retour</button>
-        <h2 className="font-bold text-ink">{isEdit ? 'Modifier vendeur' : 'Nouveau vendeur'}</h2>
-        <div />
-      </div>
+      <h2 className="font-bold text-ink mb-2">{isEdit ? 'Modifier le vendeur' : 'Nouveau vendeur'}</h2>
 
       <div>
         <label className={labelCls}>Nom / Surnom *</label>
