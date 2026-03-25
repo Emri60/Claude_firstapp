@@ -153,7 +153,7 @@ export default function ObjetForm() {
       </section>
 
       {/* Priorité / Rareté / Statut */}
-      <section className="grid grid-cols-3 gap-3">
+      <section className="grid grid-cols-2 gap-3">
         <div>
           <label className={labelCls}>Priorité</label>
           <select className={inputCls} value={form.priorite} onChange={e => set('priorite', e.target.value)}>
@@ -186,19 +186,19 @@ export default function ObjetForm() {
         <div className="grid grid-cols-2 gap-3">
           <div>
             <label className={labelCls}>Achat min</label>
-            <input type="number" step="0.5" className={inputCls} value={form.prix_achat_min} onChange={e => set('prix_achat_min', e.target.value)} />
+            <input type="number" step="0.5" inputMode="decimal" className={inputCls} value={form.prix_achat_min} onChange={e => set('prix_achat_min', e.target.value)} />
           </div>
           <div>
             <label className={labelCls}>Achat max</label>
-            <input type="number" step="0.5" className={inputCls} value={form.prix_achat_max} onChange={e => set('prix_achat_max', e.target.value)} />
+            <input type="number" step="0.5" inputMode="decimal" className={inputCls} value={form.prix_achat_max} onChange={e => set('prix_achat_max', e.target.value)} />
           </div>
           <div>
             <label className={labelCls}>Revente min</label>
-            <input type="number" step="0.5" className={inputCls} value={form.prix_revente_min} onChange={e => set('prix_revente_min', e.target.value)} />
+            <input type="number" step="0.5" inputMode="decimal" className={inputCls} value={form.prix_revente_min} onChange={e => set('prix_revente_min', e.target.value)} />
           </div>
           <div>
             <label className={labelCls}>Revente max</label>
-            <input type="number" step="0.5" className={inputCls} value={form.prix_revente_max} onChange={e => set('prix_revente_max', e.target.value)} />
+            <input type="number" step="0.5" inputMode="decimal" className={inputCls} value={form.prix_revente_max} onChange={e => set('prix_revente_max', e.target.value)} />
           </div>
         </div>
       </section>
@@ -207,11 +207,11 @@ export default function ObjetForm() {
       <section className="grid grid-cols-2 gap-3">
         <div>
           <label className={labelCls}>Poids estimé (kg)</label>
-          <input type="number" step="0.1" className={inputCls} value={form.poids_estime} onChange={e => set('poids_estime', e.target.value)} />
+          <input type="number" step="0.1" inputMode="decimal" className={inputCls} value={form.poids_estime} onChange={e => set('poids_estime', e.target.value)} />
         </div>
         <div>
           <label className={labelCls}>Volume estimé (L)</label>
-          <input type="number" step="0.5" className={inputCls} value={form.volume_estime} onChange={e => set('volume_estime', e.target.value)} />
+          <input type="number" step="0.5" inputMode="decimal" className={inputCls} value={form.volume_estime} onChange={e => set('volume_estime', e.target.value)} />
         </div>
       </section>
 

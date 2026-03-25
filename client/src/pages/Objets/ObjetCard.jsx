@@ -43,6 +43,18 @@ export default function ObjetCard({ objet }) {
             Achat : <span className="font-medium text-ink">{objet.prix_achat_min}–{objet.prix_achat_max}€</span>
           </p>
         )}
+
+        {objet.market_snapshot?.selency_prix_moyen != null && (
+          <p className="text-xs text-gray-500">
+            Shopping FR : <span className="font-medium text-secondary">~{Math.round(objet.market_snapshot.selency_prix_moyen)}€</span>
+          </p>
+        )}
+
+        {objet.market_snapshot?.trends_score != null && (
+          <div className="mt-1.5 pt-1.5 border-t border-gray-100">
+            <span className="text-xs text-primary font-semibold">Trends {objet.market_snapshot.trends_score}/100</span>
+          </div>
+        )}
       </div>
     </div>
   )

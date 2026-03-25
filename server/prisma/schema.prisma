@@ -15,7 +15,7 @@ model User {
 }
 
 model Objet {
-  id                 Int       @id @default(autoincrement())
+  id                 Int              @id @default(autoincrement())
   nom                String
   fabricant          String?
   designer           String?
@@ -31,23 +31,46 @@ model Objet {
   prix_revente_max   Float?
   marge_estimee      Float?
   mots_cles_polonais String?
+  keywords_trends_fr String?
   liens_reference    Json?
   tests_authenticite Json?
   signaux_alerte     Json?
   photos_reference   Json?
-  statut             Statut   @default(A_CHERCHER)
+  statut             Statut           @default(A_CHERCHER)
   notes              String?
   poids_estime       Float?
   volume_estime      Float?
-  created_at         DateTime @default(now())
-  updated_at         DateTime @updatedAt
+  created_at         DateTime         @default(now())
+  updated_at         DateTime         @updatedAt
   achats             Achat[]
+  market_snapshot    MarketSnapshot?
+}
+
+model MarketSnapshot {
+  id                 Int      @id @default(autoincrement())
+  objet_id           Int      @unique
+  objet              Objet    @relation(fields: [objet_id], references: [id])
+  trends_score       Int?
+  selency_count      Int?
+  selency_prix_moyen Float?
+  selency_prix_min   Float?
+  selency_prix_max   Float?
+  collected_at       DateTime @default(now())
+}
+
+model ExchangeRate {
+  id         Int      @id @default(autoincrement())
+  eur_pln    Float
+  source     String   @default("ECB")
+  fetched_at DateTime @default(now())
 }
 
 model Vendeur {
   id                  Int             @id @default(autoincrement())
   nom                 String
   telephone           String?
+  adresse             String?
+  ville               String?
   stand_habituel      String?
   marche              String?
   specialite          String?
@@ -60,17 +83,37 @@ model Vendeur {
   achats              Achat[]
 }
 
+model Voyage {
+  id              Int       @id @default(autoincrement())
+  nom             String
+  destination     Destination @default(VARSOVIE)
+  date_debut      DateTime?
+  date_fin        DateTime?
+  vol_ar          Float?    @default(0)
+  hebergement     Float?    @default(0)
+  transport_local Float?    @default(0)
+  bagage_soute    Float?    @default(0)
+  nourriture      Float?    @default(0)
+  autres_frais    Float?    @default(0)
+  notes           String?
+  created_at      DateTime  @default(now())
+  updated_at      DateTime  @updatedAt
+  achats          Achat[]
+}
+
 model Achat {
   id         Int      @id @default(autoincrement())
-  objet_id   Int
-  vendeur_id Int
+  objet_id   Int?
+  vendeur_id Int?
+  voyage_id  Int?
+  nom        String?
   prix_paye  Float
   date       DateTime
-  voyage     String?
   notes      String?
   created_at DateTime @default(now())
-  objet      Objet    @relation(fields: [objet_id], references: [id])
-  vendeur    Vendeur  @relation(fields: [vendeur_id], references: [id])
+  objet      Objet?   @relation(fields: [objet_id], references: [id])
+  vendeur    Vendeur? @relation(fields: [vendeur_id], references: [id])
+  voyage     Voyage?  @relation(fields: [voyage_id], references: [id])
 }
 
 model ChecklistItem {
@@ -121,4 +164,10 @@ enum NiveauConfiance {
   FIABLE
   MOYEN
   INCONNU
+}
+
+enum Destination {
+  VARSOVIE
+  CRACOVIE
+  AUTRE
 }

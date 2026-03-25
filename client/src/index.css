@@ -2,8 +2,21 @@
 @tailwind components;
 @tailwind utilities;
 
+* {
+  -webkit-tap-highlight-color: transparent;
+}
+
+html {
+  -webkit-overflow-scrolling: touch;
+}
+
 body {
   background-color: #FAFAF7;
   color: #1A1A2E;
   font-family: 'Inter', sans-serif;
+}
+
+button, a, [role="button"] {
+  -webkit-user-select: none;
+  user-select: none;
 }

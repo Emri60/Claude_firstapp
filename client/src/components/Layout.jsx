@@ -1,10 +1,10 @@
 import { Outlet, useLocation, useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 import BottomNav from './BottomNav'
+import OfflineBanner from './OfflineBanner'
 
 const TITLES = {
   '/objets': 'Objets',
-  '/terrain': 'Terrain',
   '/vendeurs': 'Vendeurs',
   '/preparation': 'Préparation',
 }
@@ -25,6 +25,7 @@ export default function Layout() {
 
   return (
     <div className="min-h-screen bg-bg flex flex-col">
+      <OfflineBanner />
       <header className="sticky top-0 z-40 bg-white border-b border-gray-200 px-4 py-3 flex items-center justify-between">
         {isSubPage ? (
           <button

@@ -35,6 +35,7 @@ export default function ObjetDetail() {
 
   const prev = useCallback(() => setLightbox(i => (i - 1 + photos.length) % photos.length), [photos.length])
   const next = useCallback(() => setLightbox(i => (i + 1) % photos.length), [photos.length])
+  const [touchStart, setTouchStart] = useState(null)
 
   useEffect(() => {
     if (lightbox === null) return
@@ -46,6 +47,14 @@ export default function ObjetDetail() {
     window.addEventListener('keydown', onKey)
     return () => window.removeEventListener('keydown', onKey)
   }, [lightbox, prev, next])
+
+  function handleTouchStart(e) { setTouchStart(e.touches[0].clientX) }
+  function handleTouchEnd(e) {
+    if (touchStart === null) return
+    const diff = e.changedTouches[0].clientX - touchStart
+    if (Math.abs(diff) > 50) { diff > 0 ? prev() : next() }
+    setTouchStart(null)
+  }
 
   if (loading) return (
     <div className="flex justify-center py-16">
@@ -89,7 +98,8 @@ export default function ObjetDetail() {
           </div>
 
           {/* Image */}
-          <div className="flex-1 flex items-center justify-center px-4 min-h-0" onClick={e => e.stopPropagation()}>
+          <div className="flex-1 flex items-center justify-center px-4 min-h-0" onClick={e => e.stopPropagation()}
+            onTouchStart={handleTouchStart} onTouchEnd={handleTouchEnd}>
             <img
               src={photos[lightbox]}
               alt=""
@@ -166,15 +176,31 @@ export default function ObjetDetail() {
           </div>
         )}
 
-        {/* Bouton calculateur */}
-        <button
-          onClick={() => navigate(`/terrain?onglet=calculateur&objet=${id}`)}
-          className="w-full bg-secondary text-white font-semibold py-3 rounded-xl text-sm"
-        >
-          Calculer la marge terrain
-        </button>
+        {/* Données marché */}
+        {objet.market_snapshot && (
+          <div className="bg-card rounded-2xl p-4 space-y-2">
+            <div className="flex items-center justify-between">
+              <h3 className="font-semibold text-ink text-sm uppercase tracking-wide">Données marché</h3>
+              <span className="text-xs text-gray-400">
+                {new Date(objet.market_snapshot.collected_at).toLocaleDateString('fr-FR')}
+              </span>
+            </div>
+            {objet.market_snapshot.trends_score != null && (
+              <div className="flex justify-between text-sm">
+                <span className="text-gray-500">Tendance Google FR</span>
+                <span className="font-semibold text-primary">{objet.market_snapshot.trends_score} / 100</span>
+              </div>
+            )}
+            {objet.market_snapshot.selency_prix_moyen != null && (
+              <div className="flex justify-between text-sm">
+                <span className="text-gray-500">Shopping FR ({objet.market_snapshot.selency_count} résultats)</span>
+                <span className="font-semibold text-secondary">~{Math.round(objet.market_snapshot.selency_prix_moyen)}€</span>
+              </div>
+            )}
+          </div>
+        )}
 
-        {/* Description */}
+{/* Description */}
         {objet.description && (
           <div>
             <h3 className="font-semibold text-ink mb-1">Description</h3>
@@ -249,26 +275,28 @@ export default function ObjetDetail() {
         )}
 
         {/* Actions */}
-        <div className="flex gap-3 pt-2">
+        <div className="space-y-2 pt-2">
           <button
             onClick={() => navigate(`/objets/${id}/modifier`)}
-            className="flex-1 bg-ink text-white font-semibold py-3 rounded-xl text-sm"
+            className="w-full bg-ink text-white font-semibold py-3 rounded-xl text-sm"
           >
             Modifier
           </button>
-          <button
-            onClick={handleDuplicate}
-            className="flex-1 bg-gray-100 text-gray-700 font-semibold py-3 rounded-xl text-sm"
-          >
-            Dupliquer
-          </button>
-          <button
-            onClick={handleDelete}
-            disabled={deleting}
-            className="flex-1 bg-red-50 text-primary font-semibold py-3 rounded-xl text-sm disabled:opacity-60"
-          >
-            Supprimer
-          </button>
+          <div className="flex gap-3">
+            <button
+              onClick={handleDuplicate}
+              className="flex-1 bg-gray-100 text-gray-700 font-semibold py-3 rounded-xl text-sm"
+            >
+              Dupliquer
+            </button>
+            <button
+              onClick={handleDelete}
+              disabled={deleting}
+              className="flex-1 bg-red-50 text-primary font-semibold py-3 rounded-xl text-sm disabled:opacity-60"
+            >
+              Supprimer
+            </button>
+          </div>
         </div>
       </div>
     </div>

@@ -1,40 +1,53 @@
 import { Router } from 'express'
 import prisma from '../lib/prisma.js'
+import { syncVendeur, deleteNotionByAppId } from '../lib/notion.js'
 
 const router = Router()
 
 router.get('/', async (req, res) => {
-  const { marche, niveau_confiance, a_entrepot } = req.query
-  const where = {}
-  if (marche) where.marche = { contains: marche, mode: 'insensitive' }
-  if (niveau_confiance) where.niveau_confiance = niveau_confiance
-  if (a_entrepot !== undefined) where.a_entrepot = a_entrepot === 'true'
-  const vendeurs = await prisma.vendeur.findMany({ where, orderBy: { nom: 'asc' } })
-  res.json(vendeurs)
-})
-
-router.get('/:id', async (req, res) => {
-  const vendeur = await prisma.vendeur.findUnique({
-    where: { id: Number(req.params.id) },
-    include: { achats: { include: { objet: true } } },
-  })
-  if (!vendeur) return res.status(404).json({ error: 'Introuvable' })
-  res.json(vendeur)
+  try {
+    const vendeurs = await prisma.vendeur.findMany({
+      include: { achats: { select: { id: true } } },
+      orderBy: { nom: 'asc' },
+    })
+    res.json(vendeurs)
+  } catch (err) {
+    res.status(500).json({ error: err.message })
+  }
 })
 
 router.post('/', async (req, res) => {
-  const vendeur = await prisma.vendeur.create({ data: req.body })
-  res.status(201).json(vendeur)
+  try {
+    const vendeur = await prisma.vendeur.create({ data: req.body })
+    res.status(201).json(vendeur)
+    syncVendeur(vendeur).catch(() => {})
+  } catch (err) {
+    res.status(500).json({ error: err.message })
+  }
 })
 
 router.put('/:id', async (req, res) => {
-  const vendeur = await prisma.vendeur.update({ where: { id: Number(req.params.id) }, data: req.body })
-  res.json(vendeur)
+  try {
+    const vendeur = await prisma.vendeur.update({
+      where: { id: Number(req.params.id) },
+      data: req.body,
+    })
+    res.json(vendeur)
+    syncVendeur(vendeur).catch(() => {})
+  } catch (err) {
+    res.status(500).json({ error: err.message })
+  }
 })
 
 router.delete('/:id', async (req, res) => {
-  await prisma.vendeur.delete({ where: { id: Number(req.params.id) } })
-  res.status(204).end()
+  try {
+    const id = Number(req.params.id)
+    await prisma.vendeur.delete({ where: { id } })
+    res.status(204).end()
+    deleteNotionByAppId(process.env.NOTION_VENDEURS_DS_ID, id).catch(() => {})
+  } catch (err) {
+    res.status(500).json({ error: err.message })
+  }
 })
 
 export default router

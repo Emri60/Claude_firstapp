@@ -16,7 +16,7 @@ router.post('/login', async (req, res) => {
   const valid = await bcrypt.compare(password, user.password_hash)
   if (!valid) return res.status(401).json({ error: 'Identifiants incorrects' })
 
-  const token = jwt.sign({ id: user.id, username: user.username }, process.env.JWT_SECRET, { expiresIn: '7d' })
+  const token = jwt.sign({ id: user.id, username: user.username }, process.env.JWT_SECRET, { expiresIn: '24h' })
   res.json({ token, username: user.username })
 })
 
