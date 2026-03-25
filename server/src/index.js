@@ -10,6 +10,7 @@ import objetsRouter from './routes/objets.js'
 import achatsRouter from './routes/achats.js'
 import voyagesRouter from './routes/voyages.js'
 import vendeursRouter from './routes/vendeurs.js'
+import ateliersRouter from './routes/ateliers.js'
 import checklistRouter from './routes/checklist.js'
 import rdvRouter from './routes/rdv.js'
 import uploadRouter from './routes/upload.js'
@@ -29,11 +30,12 @@ app.use('/api/objets', authMiddleware, objetsRouter)
 app.use('/api/achats', authMiddleware, achatsRouter)
 app.use('/api/voyages', authMiddleware, voyagesRouter)
 app.use('/api/vendeurs', authMiddleware, vendeursRouter)
+app.use('/api/ateliers', authMiddleware, ateliersRouter)
 app.use('/api/checklist', authMiddleware, checklistRouter)
 app.use('/api/rdv', authMiddleware, rdvRouter)
 app.use('/api/upload', authMiddleware, uploadRouter)
 app.use('/api/ai', authMiddleware, aiRouter)
-app.use('/api/market', marketRouter)
+app.use('/api/market', authMiddleware, marketRouter)
 app.use('/api/notion', authMiddleware, notionRouter)
 
 // Cron : collecte marché tous les lundis à 4h00

@@ -53,6 +53,10 @@ function buildVendeurProps(v) {
   if (v.niveau_confiance) {
     props['Fiabilité'] = { select: { name: CONFIANCE_MAP[v.niveau_confiance] ?? '1 étoile' } }
   }
+  if (v.whatsapp) props['WhatsApp'] = { checkbox: true }
+  if (v.facebook) props['Facebook'] = { url: v.facebook }
+  if (v.instagram) props['Instagram'] = { url: v.instagram }
+  if (v.tiktok) props['TikTok'] = { url: v.tiktok }
   if (v.notes) props['Notes'] = { rich_text: [{ text: { content: v.notes.slice(0, 2000) } }] }
   return props
 }
@@ -174,6 +178,48 @@ export async function syncVoyage(voyage) {
     }
   } catch (err) {
     console.error('[notion] syncVoyage error:', err.message)
+  }
+}
+
+// --- Ateliers ---
+
+function buildAtelierProps(a) {
+  const CONFIANCE_MAP = { FIABLE: '5 etoiles', MOYEN: '3 etoiles', INCONNU: '1 etoile' }
+  const SPEC_MAP = { Bois: 'Bois', Metal: 'Metal', Tissu: 'Tissu', Electrique: 'Electrique', General: 'General' }
+
+  const props = {
+    'Nom': { title: [{ text: { content: a.nom } }] },
+    'ID App': { number: a.id },
+  }
+  if (a.adresse) props['Adresse'] = { rich_text: [{ text: { content: a.adresse.slice(0, 2000) } }] }
+  if (a.ville) props['Ville'] = { rich_text: [{ text: { content: a.ville.slice(0, 2000) } }] }
+  if (a.telephone) props['Telephone'] = { phone_number: a.telephone }
+  if (a.specialite) props['Specialite'] = { select: { name: SPEC_MAP[a.specialite] ?? 'Autre' } }
+  if (a.fiabilite) props['Fiabilite'] = { select: { name: CONFIANCE_MAP[a.fiabilite] ?? '1 etoile' } }
+  if (a.whatsapp) props['WhatsApp'] = { checkbox: true }
+  if (a.facebook) props['Facebook'] = { url: a.facebook }
+  if (a.instagram) props['Instagram'] = { url: a.instagram }
+  if (a.tiktok) props['TikTok'] = { url: a.tiktok }
+  if (a.notes) props['Notes'] = { rich_text: [{ text: { content: a.notes.slice(0, 2000) } }] }
+  return props
+}
+
+export async function syncAtelier(atelier) {
+  const notion = getClient()
+  if (!notion || !process.env.NOTION_ATELIERS_DB_ID) return
+  try {
+    const existing = await findPageByAppId(process.env.NOTION_ATELIERS_DS_ID, atelier.id)
+    const props = buildAtelierProps(atelier)
+    if (existing) {
+      await notion.pages.update({ page_id: existing.id, properties: props })
+    } else {
+      await notion.pages.create({
+        parent: { database_id: process.env.NOTION_ATELIERS_DB_ID },
+        properties: props,
+      })
+    }
+  } catch (err) {
+    console.error('[notion] syncAtelier error:', err.message)
   }
 }
 

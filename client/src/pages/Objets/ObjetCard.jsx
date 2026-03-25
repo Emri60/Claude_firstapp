@@ -36,6 +36,11 @@ export default function ObjetCard({ objet }) {
         <div className="flex flex-wrap gap-1 mb-2">
           <Badge type="priorite" value={objet.priorite} />
           <Badge type="statut" value={objet.statut} />
+          {objet.restauration && (
+            <span className="inline-flex items-center rounded-full border text-xs px-2 py-1 font-medium bg-orange-50 text-orange-600 border-orange-200">
+              🔧 Restau.
+            </span>
+          )}
         </div>
 
         {objet.prix_achat_min != null && (

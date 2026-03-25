@@ -5,7 +5,7 @@ import OfflineBanner from './OfflineBanner'
 
 const TITLES = {
   '/objets': 'Objets',
-  '/vendeurs': 'Vendeurs',
+  '/gestion': 'Gestion',
   '/preparation': 'Préparation',
 }
 

@@ -19,7 +19,7 @@ const tabs = [
       </svg>
     ),
   },
-{
+  {
     to: '/gestion',
     label: 'Gestion',
     icon: (

@@ -151,6 +151,21 @@ export default function ObjetDetail() {
           {objet.dimensions && <p className="text-sm text-gray-400">{objet.dimensions}</p>}
         </div>
 
+        {/* Restauration */}
+        {objet.restauration && (
+          <div className="bg-orange-50 rounded-2xl p-4 flex items-center gap-3">
+            <span className="text-lg">🔧</span>
+            <div>
+              <p className="text-sm font-semibold text-orange-700">Restauration necessaire</p>
+              {objet.atelier && (
+                <p className="text-xs text-orange-600 mt-0.5">
+                  Atelier : {objet.atelier.nom}{objet.atelier.ville ? ` (${objet.atelier.ville})` : ''}
+                </p>
+              )}
+            </div>
+          </div>
+        )}
+
         {/* Prix */}
         {(objet.prix_achat_min != null || objet.prix_revente_min != null) && (
           <div className="bg-card rounded-2xl p-4 space-y-2">

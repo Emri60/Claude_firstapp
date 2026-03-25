@@ -103,8 +103,6 @@ function BlocScript({ bloc }) {
   )
 }
 
-import { useState } from 'react'
-
 export default function Scripts() {
   return (
     <div className="space-y-6">

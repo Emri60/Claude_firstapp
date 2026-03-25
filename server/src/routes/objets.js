@@ -33,7 +33,7 @@ router.get('/', async (req, res) => {
         { priorite: 'asc' },
         { nom: 'asc' },
       ],
-      include: { market_snapshot: true },
+      include: { market_snapshot: true, atelier: true },
     })
     res.json(objets)
   } catch (err) {
@@ -45,7 +45,7 @@ router.get('/:id', async (req, res) => {
   try {
     const objet = await prisma.objet.findUnique({
       where: { id: Number(req.params.id) },
-      include: { market_snapshot: true },
+      include: { market_snapshot: true, atelier: true },
     })
     if (!objet) return res.status(404).json({ error: 'Introuvable' })
     res.json(objet)

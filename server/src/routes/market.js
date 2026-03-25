@@ -1,9 +1,7 @@
 import { Router } from 'express'
 import prisma from '../lib/prisma.js'
-import { authMiddleware as auth } from '../middleware/auth.js'
 
 const router = Router()
-router.use(auth)
 
 // GET /api/market/dashboard
 router.get('/dashboard', async (req, res) => {

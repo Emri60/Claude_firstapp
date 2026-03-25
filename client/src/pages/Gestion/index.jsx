@@ -2,11 +2,13 @@ import { useState } from 'react'
 import Voyages from './Voyages'
 import Vendeurs from './Vendeurs'
 import Achats from './Achats'
+import Ateliers from './Ateliers'
 import NotionSync from '../Preparation/NotionSync'
 
 const TABS = [
   { id: 'voyages', label: 'Voyages' },
   { id: 'vendeurs', label: 'Vendeurs' },
+  { id: 'ateliers', label: 'Ateliers' },
   { id: 'achats', label: 'Achats' },
   { id: 'sync', label: 'Sync' },
 ]
@@ -32,6 +34,7 @@ export default function GestionPage() {
 
       {tab === 'voyages' && <Voyages />}
       {tab === 'vendeurs' && <Vendeurs />}
+      {tab === 'ateliers' && <Ateliers />}
       {tab === 'achats' && <Achats />}
       {tab === 'sync' && <NotionSync />}
     </div>

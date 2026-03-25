@@ -37,12 +37,15 @@ model Objet {
   signaux_alerte     Json?
   photos_reference   Json?
   statut             Statut           @default(A_CHERCHER)
+  restauration       Boolean          @default(false)
+  atelier_id         Int?
   notes              String?
   poids_estime       Float?
   volume_estime      Float?
   created_at         DateTime         @default(now())
   updated_at         DateTime         @updatedAt
   achats             Achat[]
+  atelier            Atelier?         @relation(fields: [atelier_id], references: [id])
   market_snapshot    MarketSnapshot?
 }
 
@@ -69,6 +72,7 @@ model Vendeur {
   id                  Int             @id @default(autoincrement())
   nom                 String
   telephone           String?
+  whatsapp            Boolean         @default(false)
   adresse             String?
   ville               String?
   stand_habituel      String?
@@ -76,6 +80,9 @@ model Vendeur {
   specialite          String?
   a_entrepot          Boolean         @default(false)
   niveau_confiance    NiveauConfiance @default(INCONNU)
+  facebook            String?
+  instagram           String?
+  tiktok              String?
   notes               String?
   rappel_avant_voyage Boolean         @default(false)
   created_at          DateTime        @default(now())
@@ -99,6 +106,24 @@ model Voyage {
   created_at      DateTime  @default(now())
   updated_at      DateTime  @updatedAt
   achats          Achat[]
+}
+
+model Atelier {
+  id           Int             @id @default(autoincrement())
+  nom          String
+  adresse      String?
+  ville        String?
+  telephone    String?
+  whatsapp     Boolean         @default(false)
+  specialite   String?
+  fiabilite    NiveauConfiance @default(INCONNU)
+  facebook     String?
+  instagram    String?
+  tiktok       String?
+  notes        String?
+  created_at   DateTime        @default(now())
+  updated_at   DateTime        @updatedAt
+  objets       Objet[]
 }
 
 model Achat {

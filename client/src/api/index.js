@@ -24,7 +24,7 @@ api.interceptors.response.use(
 
 // --- Offline-aware wrappers ---
 
-const CACHEABLE = ['/achats', '/vendeurs', '/voyages', '/objets', '/market/dashboard']
+const CACHEABLE = ['/achats', '/vendeurs', '/voyages', '/objets', '/ateliers', '/market/dashboard']
 
 function isCacheable(url) {
   return CACHEABLE.some(p => url === p || url.startsWith(p + '/'))

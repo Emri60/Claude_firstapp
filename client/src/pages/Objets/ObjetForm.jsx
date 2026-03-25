@@ -6,7 +6,8 @@ const EMPTY = {
   nom: '', fabricant: '', designer: '', categorie: 'LAMPE', epoque: '', dimensions: '',
   description: '', rarete: 'MOYEN', priorite: 'HAUTE',
   prix_achat_min: '', prix_achat_max: '', prix_revente_min: '', prix_revente_max: '',
-  mots_cles_polonais: '', statut: 'A_CHERCHER', notes: '', poids_estime: '', volume_estime: '',
+  mots_cles_polonais: '', statut: 'A_CHERCHER', restauration: false, atelier_id: '',
+  notes: '', poids_estime: '', volume_estime: '',
   liens_reference: [], tests_authenticite: [], signaux_alerte: [], photos_reference: [],
 }
 
@@ -17,11 +18,13 @@ export default function ObjetForm() {
   const navigate = useNavigate()
   const isEdit = !!id
   const [form, setForm] = useState(EMPTY)
+  const [ateliers, setAteliers] = useState([])
   const [loading, setLoading] = useState(isEdit)
   const [saving, setSaving] = useState(false)
   const [uploading, setUploading] = useState(false)
 
   useEffect(() => {
+    api.get('/ateliers').then(r => setAteliers(r.data)).catch(() => {})
     if (!isEdit) return
     api.get(`/objets/${id}`).then(r => {
       const o = r.data
@@ -33,6 +36,8 @@ export default function ObjetForm() {
         prix_revente_max: o.prix_revente_max ?? '',
         poids_estime: o.poids_estime ?? '',
         volume_estime: o.volume_estime ?? '',
+        restauration: o.restauration ?? false,
+        atelier_id: o.atelier_id ?? '',
         liens_reference: o.liens_reference ?? [],
         tests_authenticite: o.tests_authenticite ?? [],
         signaux_alerte: o.signaux_alerte ?? [],
@@ -81,6 +86,8 @@ export default function ObjetForm() {
       prix_revente_max: toFloat(form.prix_revente_max),
       poids_estime: toFloat(form.poids_estime),
       volume_estime: toFloat(form.volume_estime),
+      restauration: form.restauration,
+      atelier_id: form.atelier_id ? Number(form.atelier_id) : null,
     }
     try {
       if (isEdit) {
@@ -178,6 +185,21 @@ export default function ObjetForm() {
             <option value="ACHETE">Acheté</option>
           </select>
         </div>
+      </section>
+
+      {/* Restauration */}
+      <section className="space-y-3">
+        <label className="flex items-center gap-3 bg-card rounded-xl px-4 py-3 border border-gray-200 cursor-pointer">
+          <input type="checkbox" checked={form.restauration} onChange={e => set('restauration', e.target.checked)}
+            className="w-4 h-4 rounded border-gray-300" />
+          <span className="text-sm text-ink">Restauration necessaire</span>
+        </label>
+        {form.restauration && (
+          <select className={inputCls} value={form.atelier_id} onChange={e => set('atelier_id', e.target.value)}>
+            <option value="">Atelier (optionnel)</option>
+            {ateliers.map(a => <option key={a.id} value={a.id}>{a.nom}{a.specialite ? ` — ${a.specialite}` : ''}{a.ville ? ` (${a.ville})` : ''}</option>)}
+          </select>
+        )}
       </section>
 
       {/* Prix */}

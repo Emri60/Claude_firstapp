@@ -5,8 +5,9 @@ const CONFIANCE_LABELS = { FIABLE: '⭐⭐⭐', MOYEN: '⭐⭐', INCONNU: '⭐' 
 const CONFIANCE_COLORS = { FIABLE: 'text-green-600', MOYEN: 'text-yellow-600', INCONNU: 'text-gray-400' }
 
 const EMPTY = {
-  nom: '', telephone: '', adresse: '', ville: '', marche: '', specialite: '',
-  a_entrepot: false, niveau_confiance: 'INCONNU', notes: '',
+  nom: '', telephone: '', whatsapp: false, adresse: '', ville: '', marche: '', specialite: '',
+  a_entrepot: false, niveau_confiance: 'INCONNU',
+  facebook: '', instagram: '', tiktok: '', notes: '',
 }
 
 export default function Vendeurs() {
@@ -37,12 +38,16 @@ export default function Vendeurs() {
     setForm({
       nom: v.nom,
       telephone: v.telephone ?? '',
+      whatsapp: v.whatsapp ?? false,
       adresse: v.adresse ?? '',
       ville: v.ville ?? '',
       marche: v.marche ?? '',
       specialite: v.specialite ?? '',
       a_entrepot: v.a_entrepot,
       niveau_confiance: v.niveau_confiance,
+      facebook: v.facebook ?? '',
+      instagram: v.instagram ?? '',
+      tiktok: v.tiktok ?? '',
       notes: v.notes ?? '',
     })
     setEditId(v.id)
@@ -56,12 +61,16 @@ export default function Vendeurs() {
       const data = {
         nom: form.nom,
         telephone: form.telephone || null,
+        whatsapp: form.whatsapp,
         adresse: form.adresse || null,
         ville: form.ville || null,
         marche: form.marche || null,
         specialite: form.specialite || null,
         a_entrepot: form.a_entrepot,
         niveau_confiance: form.niveau_confiance,
+        facebook: form.facebook || null,
+        instagram: form.instagram || null,
+        tiktok: form.tiktok || null,
         notes: form.notes || null,
       }
       if (editId) {
@@ -99,8 +108,15 @@ export default function Vendeurs() {
       <input required placeholder="Nom du vendeur" value={form.nom} onChange={e => setForm({ ...form, nom: e.target.value })}
         className="w-full bg-card rounded-xl px-4 py-3 text-sm border border-gray-200 focus:border-primary focus:outline-none" />
 
-      <input type="tel" placeholder="Téléphone" value={form.telephone} onChange={e => setForm({ ...form, telephone: e.target.value })}
-        className="w-full bg-card rounded-xl px-4 py-3 text-sm border border-gray-200 focus:border-primary focus:outline-none" />
+      <div className="flex gap-3 items-center">
+        <input type="tel" placeholder="Téléphone" value={form.telephone} onChange={e => setForm({ ...form, telephone: e.target.value })}
+          className="flex-1 bg-card rounded-xl px-4 py-3 text-sm border border-gray-200 focus:border-primary focus:outline-none" />
+        <label className="flex items-center gap-2 bg-card rounded-xl px-3 py-3 border border-gray-200 cursor-pointer flex-shrink-0">
+          <input type="checkbox" checked={form.whatsapp} onChange={e => setForm({ ...form, whatsapp: e.target.checked })}
+            className="w-4 h-4 rounded border-gray-300" />
+          <span className="text-sm text-ink">WhatsApp</span>
+        </label>
+      </div>
 
       <div className="grid grid-cols-3 gap-3">
         <div className="col-span-2">
@@ -145,6 +161,16 @@ export default function Vendeurs() {
         <span className="text-sm text-ink">A un entrepôt</span>
       </label>
 
+      <div className="space-y-2">
+        <p className="text-xs text-gray-400 font-medium uppercase tracking-wide">Réseaux sociaux</p>
+        <input placeholder="Facebook (URL ou pseudo)" value={form.facebook} onChange={e => setForm({ ...form, facebook: e.target.value })}
+          className="w-full bg-card rounded-xl px-4 py-3 text-sm border border-gray-200 focus:border-primary focus:outline-none" />
+        <input placeholder="Instagram (URL ou pseudo)" value={form.instagram} onChange={e => setForm({ ...form, instagram: e.target.value })}
+          className="w-full bg-card rounded-xl px-4 py-3 text-sm border border-gray-200 focus:border-primary focus:outline-none" />
+        <input placeholder="TikTok (URL ou pseudo)" value={form.tiktok} onChange={e => setForm({ ...form, tiktok: e.target.value })}
+          className="w-full bg-card rounded-xl px-4 py-3 text-sm border border-gray-200 focus:border-primary focus:outline-none" />
+      </div>
+
       <textarea placeholder="Notes" rows={2} value={form.notes} onChange={e => setForm({ ...form, notes: e.target.value })}
         className="w-full bg-card rounded-xl px-4 py-3 text-sm border border-gray-200 focus:border-primary focus:outline-none" />
 
@@ -188,8 +214,19 @@ export default function Vendeurs() {
                 {v.specialite && <span>· {v.specialite}</span>}
                 {v.a_entrepot && <span>· 📦 Entrepôt</span>}
               </div>
-              {v.telephone && <p className="text-xs text-gray-500 mt-1">📞 {v.telephone}</p>}
+              {v.telephone && (
+                <p className="text-xs text-gray-500 mt-1">
+                  📞 {v.telephone}{v.whatsapp && ' · WhatsApp'}
+                </p>
+              )}
               {(v.adresse || v.ville) && <p className="text-xs text-gray-500 mt-0.5">📍 {[v.adresse, v.ville].filter(Boolean).join(', ')}</p>}
+              {(v.facebook || v.instagram || v.tiktok) && (
+                <div className="flex gap-2 mt-1 text-xs text-gray-400">
+                  {v.facebook && <span>FB</span>}
+                  {v.instagram && <span>Insta</span>}
+                  {v.tiktok && <span>TikTok</span>}
+                </div>
+              )}
             </div>
             <button onClick={e => { e.stopPropagation(); handleDelete(v.id) }}
               className="text-xs text-red-400 hover:text-red-600 ml-2">
